@@ -1,0 +1,72 @@
+\documentclass[11pt]{article}
+\usepackage{inote}
+\inotesetup{mode=note, qr=true, video=Ab3dEf6hIjK,
+  brand={Interactive Note}, subject={HSC Physics 1st Paper · Chapter-10},
+  chapter={আদর্শ গ্যাস}, chapter-en={Ideal Gas \& Kinetic Theory}, chapter-no={দশম অধ্যায়}}
+\begin{document}
+\chapterbanner
+\sectionbar{Lecture Map — টপিক অনুযায়ী ভাগ}
+\begin{tblr}{colspec={X[2.2,l,m] Q[c,m] Q[c,m] X[2.6,l,m] Q[c,m]},
+  hlines={gridgray,.5pt},vlines={gridgray,.5pt},
+  row{1}={bg=headgray,font=\labelfont\bfseries,halign=c},rowsep=2.5pt}
+টাইপের নাম & গুরুত্ব & ভিডিওতে & যা যা আছে & পৃষ্ঠা\\
+\textbf{Type-01:} গ্যাসের সূত্র ও সমীকরণ & \stars{5} & 00:42 & বয়েলের সূত্র, $PV=nRT$, ২টি ম্যাথ & ১\\
+\textbf{Type-02:} গ্যাসের গতিতত্ত্ব & \stars{4} & 10:20 & মূল গড় বর্গবেগ, ১টি ম্যাথ & ২\\
+\end{tblr}
+\fancyheading{গুরুত্বপূর্ণ সূত্রাবলি ও বিশ্লেষণ}
+\begin{formulagrid}[0.5]
+\sqitem{বয়েলের সূত্র:} $P_1V_1=P_2V_2$\quad [যখন $T$ স্থির]
+&
+\begin{tikzpicture}[scale=.6]
+  \draw[line width=1.2pt] (0,3)--(0,0)--(3,0)--(3,3);
+  \fill[gray!60] (0.04,1.9) rectangle (2.96,2.15);
+  \draw[line width=1pt] (1.5,2.15)--(1.5,3.2);
+  \draw[force] (1.5,3.9)--(1.5,3.25) node[pos=0,above,lbl]{$P$};
+  \pgfmathsetseed{7}
+  \foreach \i in {1,...,22}{\fill (0.25+2.5*rnd,0.2+1.5*rnd) circle (1.4pt);}
+  \draw[dim] (3.35,0)--(3.35,1.9) node[midway,right,lbl]{$V$};
+\end{tikzpicture}\\
+\sqitem{আদর্শ গ্যাস সমীকরণ:} $PV=nRT$ &
+$n=$ মোল সংখ্যা, $R=8.314\ \text{J\,mol}^{-1}\text{K}^{-1}$\\
+\sqitem{মূল গড় বর্গবেগ:} $C_{\text{rms}}=\sqrt{\dfrac{3RT}{M}}$ &
+$M=$ আণবিক ভর ($\text{kg\,mol}^{-1}$ এককে)\\
+\end{formulagrid}
+\begin{unitbox}[একক রূপান্তর]
+\item $1\ \text{atm}=1.013\times10^{5}\ \text{Pa}$
+\item $1\ \text{m}^3=1000\ \text{L}$;\quad $T(\text{K})=\theta(^\circ\text{C})+273$
+\end{unitbox}
+\begin{multicols}{2}
+\begin{typebox}{01}{গ্যাসের সূত্র ও সমীকরণ}
+\withqr{42}{\textbf{কনসেপ্ট:} তাপমাত্রা স্থির থাকলে নির্দিষ্ট ভরের গ্যাসের চাপ তার আয়তনের ব্যস্তানুপাতিক — চাপ দ্বিগুণ হলে আয়তন অর্ধেক।}
+\withqr{310}{সব সূত্র একসাথে মিলিয়ে পাই আদর্শ গ্যাস সমীকরণ $PV=nRT$, যেখানে $T$ পরম তাপমাত্রা।}
+\end{typebox}
+\begin{tipbox}[135]
+তাপমাত্রা সবসময় \textbf{কেলভিনে} নিতে হবে, সেলসিয়াসে নয় — এটাই সবচেয়ে কমন ভুল।
+\end{tipbox}
+\cq{১}[ভিডিও ম্যাথ]{$2\ \text{atm}$ চাপে $10\ \text{L}$ গ্যাসের চাপ স্থির তাপমাত্রায় $5\ \text{atm}$ করলে আয়তন কত হবে?}[210]
+\solhead
+\workgiven[0.6]{%
+$V_2=\dfrac{P_1V_1}{P_2}=\dfrac{2\times10}{5}$\\
+$\;\;\,=4\ \text{L}$ \Ans}
+{\given{$P_1=2\ \text{atm}$\\ $V_1=10\ \text{L}$\\ $P_2=5\ \text{atm}$}}
+\cq{২}[ভিডিও ম্যাথ]{$27^\circ\text{C}$ তাপমাত্রায় $2$ মোল গ্যাস $0.05\ \text{m}^3$ আয়তনে আছে। গ্যাসের চাপ কত?}[465]
+\solhead
+\workgiven[0.6]{%
+$P=\dfrac{nRT}{V}=\dfrac{2\times8.314\times300}{0.05}$\\
+$\;\;=9.98\times10^{4}\ \text{Pa}$ \Ans}
+{\given{$n=2$\\ $T=300\ \text{K}$\\ $V=0.05\ \text{m}^3$}}
+\begin{typebox}{02}{গ্যাসের গতিতত্ত্ব}
+\withqr{620}{\textbf{কনসেপ্ট:} গ্যাসের অণুগুলো বিভিন্ন বেগে ছুটছে; তাদের বেগের বর্গের গড়ের বর্গমূলই মূল গড় বর্গবেগ $C_{\text{rms}}$। তাপমাত্রা বাড়লে $C_{\text{rms}}$ বাড়ে।}
+\end{typebox}
+\cq{৩}[ভিডিও ম্যাথ]{$27^\circ\text{C}$ তাপমাত্রায় অক্সিজেন অণুর মূল গড় বর্গবেগ নির্ণয় করো।}[725]
+\solhead
+\workgiven[0.6]{%
+$C_{\text{rms}}=\sqrt{\dfrac{3RT}{M}}$\\
+$\;\;=\sqrt{\dfrac{3\times8.314\times300}{0.032}}$\\
+$\;\;=483.56\ \text{m\,s}^{-1}$ \Ans}
+{\given{$T=300\ \text{K}$\\ $M=0.032\ \text{kg\,mol}^{-1}$}}
+\begin{tipbox}[870]
+$M$ অবশ্যই $\text{kg\,mol}^{-1}$ এককে নেবে — অক্সিজেনের জন্য $32$ নয়, $0.032$।
+\end{tipbox}
+\end{multicols}
+\end{document}

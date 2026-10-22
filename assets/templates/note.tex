@@ -1,0 +1,67 @@
+% =====================================================================
+%  TEMPLATE — /note  and  /note-with-qr     (book-style lecture note)
+%  /note          -> qr=false        /note-with-qr -> qr=true
+%  Replace every <<...>>. Delete blocks you do not need. Build with:
+%     bash <skill>/scripts/build.sh note.tex transcript.tsv
+% =====================================================================
+\documentclass[11pt]{article}
+\usepackage{inote}
+\inotesetup{mode=note, qr=true,
+  video=<<11-char YouTube ID>>,                 % from: transcript.py id <url>
+  brand={<<brand / channel name or leave empty>>},
+  subject={<<HSC Physics 1st Paper · Chapter-02>>},
+  chapter={<<ভেক্টর>>}, chapter-en={<<Vector>>}, chapter-no={<<দ্বিতীয় অধ্যায়>>}}
+\begin{document}
+\chapterbanner                    % full-lecture QR sits in the right chevron
+
+% ---------- 1. LECTURE MAP (one row per Type, in lecture order) ----------
+\sectionbar{Lecture Map — টপিক অনুযায়ী ভাগ}
+\begin{tblr}{colspec={X[2.2,l,m] Q[c,m] Q[c,m] X[2.6,l,m] Q[c,m]},
+  hlines={gridgray,.5pt},vlines={gridgray,.5pt},
+  row{1}={bg=headgray,font=\labelfont\bfseries,halign=c},rowsep=2.5pt}
+টাইপের নাম & গুরুত্ব & ভিডিওতে & যা যা আছে & পৃষ্ঠা\\
+\textbf{Type-01:} <<name>> & \stars{5} & <<03:10>> & <<what is inside>> & <<২>>\\
+\end{tblr}
+% (Board-analysis table ONLY if the user's source contains real board data.)
+
+% ---------- 2. FORMULA SHEET: every formula of the lecture, ONCE ----------
+\fancyheading{গুরুত্বপূর্ণ সূত্রাবলি ও বিশ্লেষণ}
+\begin{formulagrid}[0.52]
+\sqitem{<<formula group title>>:}
+$<<formula>>$\par
+\hspace*{3mm}<<symbol meanings>>
+&
+<<diagram (tikzpicture) OR where-clause / analysis bullets>>\\
+\end{formulagrid}
+
+\begin{unitbox}[<<একক রূপান্তর / দ্রুত মনে রাখো>>]
+\item <<one fact per item>>
+\end{unitbox}
+
+% ---------- 3. TYPE-WISE: concept first, then the maths of that type ----------
+\begin{multicols}{2}
+\begin{typebox}{01}{<<Type name>>}
+\withqr{<<sec where teacher STARTS explaining this concept>>}{%
+\textbf{কনসেপ্ট:} <<explanation in simple Bangla, built from the teacher's words>>}
+\sqitem{<<key formula name>>:} $<<formula>>$
+\begin{roundbox}\textbullet\ <<key takeaway>>\end{roundbox}
+\end{typebox}
+
+\begin{tipbox}[<<sec>>]
+<<a tip the teacher SAID that is NOT on the slide>>
+\end{tipbox}
+
+\cq{১}[<<source: ভিডিও ম্যাথ / বোর্ড + সাল if known>>]{<<question stem>>}[<<sec where this math starts>>]
+\solhead
+\workgiven[0.62]{%
+$<<step 1>>$\\
+$<<step 2>>$\\
+$<<answer>>$ \Ans}
+{\given{$<<data 1>>$\\ $<<data 2>>$}}
+
+% CQ with parts:
+% \cq{২}[...]{<<stem>>}[<<sec>>]
+% \qpart{গ}{<<part c>>}  \qpart{ঘ}{<<part d>>}
+% \solhead \anslabel{গ} ... \anslabel{ঘ} ...
+\end{multicols}
+\end{document}

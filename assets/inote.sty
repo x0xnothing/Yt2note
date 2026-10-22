@@ -1,0 +1,371 @@
+% =====================================================================
+%  inote.sty  —  Interactive Note / Practice Sheet / BUET Written
+%  XeLaTeX only. Fonts are loaded from ./fonts (created by setup.sh)
+% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{inote}[2026/10/22 v1.0 Bangla publication-style notes]
+
+\RequirePackage{iftex}
+\RequireXeTeX
+\RequirePackage{pgfkeys,etoolbox,calc,xparse}
+
+% ---------------------------------------------------------------- options
+\newif\ifinote@qr      \inote@qrfalse
+\newif\ifinote@ans     \inote@anstrue
+\newif\ifinote@ansbox  \inote@ansboxfalse
+\def\inote@mode{note}
+\def\inote@fontdir{fonts/}
+\def\inote@brand{}
+\def\inote@watermark{}
+\def\inote@subject{}
+\def\inote@chapter{}
+\def\inote@chapteren{}
+\def\inote@chapterno{}
+\def\inote@video{}       % YouTube video ID, e.g. dQw4w9WgXcQ
+\def\inote@testtitle{}
+\def\inote@accent{1F5FBF}
+\pgfkeys{/inote/.cd,
+  mode/.store in=\inote@mode,
+  qr/.is if=inote@qr,
+  answers/.is if=inote@ans,
+  answerbox/.is if=inote@ansbox,
+  fontdir/.store in=\inote@fontdir,
+  brand/.store in=\inote@brand,
+  watermark/.store in=\inote@watermark,
+  subject/.store in=\inote@subject,
+  chapter/.store in=\inote@chapter,
+  chapter-en/.store in=\inote@chapteren,
+  chapter-no/.store in=\inote@chapterno,
+  video/.store in=\inote@video,
+  test-title/.store in=\inote@testtitle,
+  accent/.store in=\inote@accent,
+}
+\newcommand\inotesetup[1]{\pgfkeys{/inote/.cd,#1}\inote@apply}
+
+% ---------------------------------------------------------------- packages
+\RequirePackage[a4paper,top=16mm,bottom=20mm,left=13mm,right=13mm,
+  headsep=5mm,footskip=11mm]{geometry}
+\RequirePackage{fontspec}
+\RequirePackage{amsmath,amssymb}
+\RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+\RequirePackage{xcolor}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,patterns,decorations.pathmorphing,
+  decorations.markings,shapes.geometric,angles,quotes,3d,shadows,backgrounds,fit}
+\RequirePackage{pgfplots}\pgfplotsset{compat=1.18}
+\RequirePackage[siunitx]{circuitikz}
+\RequirePackage{tabularray}
+\RequirePackage{multicol}
+\RequirePackage{enumitem}
+\RequirePackage{fancyhdr}
+\RequirePackage{eso-pic}
+\RequirePackage{needspace}
+\RequirePackage{qrcode}
+\RequirePackage[hidelinks]{hyperref}
+\RequirePackage{ragged2e}
+
+% ---------------------------------------------------------------- fonts
+% Body: Tiro Bangla (bold: Noto Serif Bengali Bold; both have Latin) | Labels: Hind Siliguri | Display: Anek Bangla
+\AtEndPreamble{%
+\setmainfont{TiroBangla}[Path=\inote@fontdir,Extension=.ttf,
+  UprightFont=*-Regular,ItalicFont=*-Italic,
+  BoldFont=NotoSerifBengali-Bold,Script=Bengali]
+\setsansfont{HindSiliguri}[Path=\inote@fontdir,Extension=.ttf,
+  UprightFont=*-Regular,BoldFont=*-Bold,Script=Bengali]
+\newfontfamily\labelfont{HindSiliguri}[Path=\inote@fontdir,Extension=.ttf,
+  UprightFont=*-SemiBold,BoldFont=*-Bold,Script=Bengali]
+\newfontfamily\displayfont{AnekBangla}[Path=\inote@fontdir,Extension=.ttf,
+  UprightFont=*-ExtraBold,Script=Bengali]
+}
+\AtEndPreamble{\setmathfont{latinmodern-math}[Path=\inote@fontdir,Extension=.otf]}
+% Bangla text inside math: \text{...} uses the main font automatically.
+\linespread{1.08}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt plus 1pt}
+\setlength{\emergencystretch}{3em}   % fights overfull lines in Bangla
+\tolerance=2000 \hbadness=3000
+\setlength{\columnsep}{7mm}
+\setlength{\columnseprule}{0.5pt}
+\raggedcolumns   % never stretch glue inside columns (prevents header/body gaps)
+\def\columnseprulecolor{\color{black!70}}
+\setlist{nosep,leftmargin=*}
+
+% ---------------------------------------------------------------- colours
+\definecolor{ink}{HTML}{111111}
+\definecolor{gridgray}{HTML}{555555}
+\definecolor{headgray}{HTML}{D9D9D9}
+\definecolor{softgray}{HTML}{F2F2F2}
+\definecolor{tagblue}{HTML}{1F4FBF}
+\definecolor{accent}{HTML}{1F5FBF}
+\definecolor{tipred}{HTML}{C8102E}
+\definecolor{watergray}{HTML}{EDEDED}
+
+% ---------------------------------------------------------------- helpers
+% Conditional break that ALSO works inside multicols: if fewer than #1 lines are left
+% in the column/page, break here; otherwise the two glues cancel out.
+\newcommand\keeplines[1]{\par\vspace{0pt plus #1\baselineskip}\penalty-250
+  \vspace{0pt plus -#1\baselineskip}\relax}
+\newcommand\inotetri{{\fontsize{7}{7}\selectfont$\blacktriangleright$}}
+\newcommand\bnsec[1]{%  seconds -> mm:ss / h:mm:ss (Latin digits)
+  \begingroup\count0=#1\relax
+  \count2=\count0 \divide\count2 by 3600
+  \count4=\count0 \divide\count4 by 60 \count6=\count4
+  \multiply\count2 by 60 \advance\count4 by -\count2 \divide\count2 by 60
+  \multiply\count6 by 60 \advance\count0 by -\count6
+  \ifnum\count2>0 \the\count2:\fi
+  \ifnum\count4<10 0\fi\the\count4:\ifnum\count0<10 0\fi\the\count0\endgroup}
+% QR/link target: always opens in browser (noapp=1), jumps to the timestamp
+\edef\inote@amp{\string&}
+\newcommand\ytlink[1]{https://www.youtube.com/watch?v=\inote@video\inote@amp t=#1s\inote@amp noapp=1}
+\newcommand\ytfull{https://www.youtube.com/watch?v=\inote@video\inote@amp noapp=1}
+% Small QR that jumps to a timestamp (seconds). Only drawn when qr=true.
+\newcommand\tqr[2][1.25cm]{%
+  \ifinote@qr\ifx\inote@video\@empty\else
+  \begin{tabular}[t]{@{}c@{}}%
+    \href{\ytlink{#2}}{\qrcode[height=#1,level=M]{\ytlink{#2}}}\\[-1pt]
+    {\fontsize{6.5}{7}\ttfamily\bnsec{#2}}%
+  \end{tabular}\fi\fi}
+% A paragraph with a QR on its right (no overlap: text width shrinks).
+\newlength\inote@qrw
+\NewDocumentCommand\withqr{m +m}{%
+  \ifinote@qr\ifx\inote@video\@empty #2\par\else
+  \par\noindent
+  \setlength\inote@qrw{1.45cm}%
+  \begin{minipage}[t]{\dimexpr\linewidth-\inote@qrw-2mm\relax}#2\end{minipage}\hfill
+  \begin{minipage}[t]{\inote@qrw}\vspace{0pt}\raggedleft\tqr{#1}\end{minipage}\par
+  \fi\else #2\par\fi}
+
+% =====================================================================
+%  MODE 1 — PRACTICE SHEET  (blue topic bars, Problem-NN, [source] tags)
+% =====================================================================
+\newcounter{problem}
+\newcommand\sheettitle[2]{% {অধ্যায়-২}{ভেক্টর}
+  \begin{center}\vspace*{-2mm}{\bfseries\Large #1\par}\vspace{1pt}
+  {\bfseries\LARGE #2\par}\end{center}\vspace{1mm}}
+\newcommand\topicbar[1]{%
+  \par\keeplines{10}\vspace{3pt}%
+  \begin{tcolorbox}[enhanced,colback=accent,colframe=accent,arc=0pt,
+    boxrule=0pt,left=2mm,right=2mm,top=1.6mm,bottom=1.6mm,halign=center]
+  \color{white}\large #1\end{tcolorbox}\vspace{2pt}}
+% \problem[source tag]{statement}{short answer}{optional timestamp}
+\NewDocumentCommand\problem{o m m o}{%
+  \par\keeplines{4}\vspace{4pt}%
+  \refstepcounter{problem}%
+  \IfValueTF{#4}{\withqr{#4}{\inote@probbody{#1}{#2}}}{\inote@probbody{#1}{#2}}%
+  \ifinote@ans
+    \par\vspace{2pt}{\bfseries সমাধান :} #3\par
+  \else\ifinote@ansbox
+    \par\vspace{1pt}\tikz\draw[gray!60,dash pattern=on 2pt off 1.5pt,rounded corners=2pt]
+      (0,0) rectangle (\linewidth-1pt,2.2cm);\par
+  \fi\fi\vspace{2pt}}
+\newcommand\inote@probbody[2]{%
+  {\large Problem-\ifnum\value{problem}<10 0\fi\arabic{problem}\,:}\ #2%
+  \IfValueT{#1}{\ifx\relax#1\relax\else\unskip\nobreak\hfil\penalty50\hskip1.5em\hbox{}\nobreak\hfill
+    \mbox{\color{tagblue}\bfseries [#1]}\fi}}
+\newcommand\practicefooter{%
+  \fancyfoot[C]{\begin{tikzpicture}[remember picture,overlay]
+    \fill[black] ([xshift=13mm,yshift=8mm]current page.south west) rectangle
+      ([xshift=-13mm,yshift=14mm]current page.south east);
+    \node[white,font=\labelfont\bfseries,anchor=west] at
+      ([xshift=16mm,yshift=11mm]current page.south west) {\inote@subject};
+    \node[white,font=\bfseries\large] at ([yshift=11mm]current page.south) {\thepage};
+    \node[white,font=\labelfont\bfseries,anchor=east] at
+      ([xshift=-16mm,yshift=11mm]current page.south east) {\inote@chapter};
+  \end{tikzpicture}}}
+
+% =====================================================================
+%  MODE 2 — NOTE  (publication book look: chapter banner, tables,
+%  formula/analysis grid, Type boxes, CQ solutions)
+% =====================================================================
+\newcommand\chapterbanner{%
+  \noindent\begin{tikzpicture}
+    \pgfmathsetlengthmacro\W{\linewidth-1.6pt}
+    \draw[line width=1.4pt,rounded corners=7pt] (0,0) rectangle (\W,2.5cm);
+    % left black slab + white label
+    \fill[black] (0.18,0.3) -- (3.9,0.3) -- (4.45,2.2) -- (0.18,2.2) -- cycle;
+    \node[fill=white,draw=black,line width=1pt,rounded corners=4pt,
+      inner xsep=8pt,inner ysep=5pt,font=\labelfont\bfseries\Large]
+      at (1.95,1.25) {\inote@chapterno};
+    % title
+    \node[font=\displayfont\fontsize{26}{30}\selectfont,anchor=center]
+      at (\W/2+1.2cm,1.62) {\inote@chapter};
+    \node[font=\bfseries\fontsize{16}{18}\selectfont,anchor=center]
+      at (\W/2+1.2cm,0.68) {\inote@chapteren};
+    % right chevron (holds the full-lecture QR in qr mode)
+    \draw[line width=1.6pt] (\W-3.35cm,2.2) -- (\W-1.0cm,2.2) -- (\W-0.2cm,1.25)
+       -- (\W-1.0cm,0.3) -- (\W-3.35cm,0.3) -- (\W-2.6cm,1.25) -- cycle;
+    \ifinote@qr\ifx\inote@video\@empty\else
+      \node[fill=white,inner sep=1.2mm] at (\W-1.55cm,1.25)
+        {\href{\ytfull}{\qrcode[height=1.25cm]{\ytfull}}};
+    \fi\fi
+  \end{tikzpicture}\par\vspace{3mm}}
+\newcommand\sectionbar[1]{% black full-width bar, white bold text
+  \par\keeplines{4}\vspace{2mm}%
+  \begin{tcolorbox}[enhanced,colback=ink,colframe=ink,arc=0pt,boxrule=0pt,
+    left=2mm,right=2mm,top=.8mm,bottom=.8mm,halign=center]
+  \color{white}\labelfont\bfseries\large #1\end{tcolorbox}\vspace{1mm}}
+\newcommand\fancyheading[1]{% boxed heading with slanted black corner + shadow
+  \par\keeplines{5}\vspace{2mm}\noindent
+  \begin{tikzpicture}
+    \fill[black] (2pt,-2.5pt) rectangle (\linewidth+1.5pt,0.82cm-2.5pt);
+    \draw[fill=white,line width=.8pt] (0,0) rectangle (\linewidth-1.5pt,0.82cm);
+    \fill[black] (0,0) -- (1.0cm,0.82cm) -- (0,0.82cm) -- cycle;
+    \draw[white,line width=1.2pt] (0.32cm,0) -- (1.32cm,0.82cm);
+    \node[font=\labelfont\bfseries\Large] at (\linewidth/2,0.41cm) {#1};
+  \end{tikzpicture}\par\vspace{2mm}}
+\newcommand\subhead[1]{\par\keeplines{3}\vspace{3pt}%
+  {\labelfont\bfseries\large #1}\par\vspace{2pt}}
+\newcommand\sqitem[1]{\par\vspace{2pt}{\scriptsize$\blacksquare$}\ \textbf{#1}\par}
+\newcommand\dotitem{\par\hspace*{3mm}\llap{\textbullet\ }}
+% Formula/analysis grid  ( সূত্রাবলি | বিশ্লেষণ )
+\NewDocumentEnvironment{formulagrid}{O{0.5}}{%
+  \par\vspace{-1mm}\DefTblrTemplate{contfoot-text}{default}{}%
+  \DefTblrTemplate{conthead-text}{default}{}%
+  \begin{longtblr}[entry=none,label=none]{
+    colspec={X[#1,l,h] X[l,m]}, hlines={gridgray,.5pt}, vlines={gridgray,.5pt},
+    row{1}={bg=headgray,font=\labelfont\bfseries,halign=c}, rowhead=1,
+    rowsep=3pt, colsep=5pt}
+  সূত্রাবলি & বিশ্লেষণ \\}%
+ {\end{longtblr}\par\vspace{1mm}}
+% Generic grid table helper style
+\NewTblrTheme{inote}{\DefTblrTemplate{caption}{default}{}%
+  \DefTblrTemplate{contfoot-text}{default}{}\DefTblrTemplate{conthead-text}{default}{}}
+\SetTblrStyle{head}{font=\labelfont\bfseries}
+% Unit conversion box
+\NewDocumentEnvironment{unitbox}{O{একক রূপান্তর}}{%
+  \par\keeplines{6}\vspace{1mm}%
+  {\centering\tikz\node[fill=headgray,rounded corners=5pt,inner xsep=14pt,inner ysep=4pt,
+    font=\labelfont\bfseries\large]{#1};\par}\vspace{1.5mm}%
+  \begin{tcolorbox}[enhanced,width=.72\linewidth,center,colback=white,
+    colframe=black,boxrule=.6pt,arc=0pt,borderline={.4pt}{1.6pt}{black},
+    left=6mm,right=4mm,top=2mm,bottom=2mm,before skip=0pt,after skip=2mm]
+  \begin{itemize}[label={\scriptsize$\blacklozenge$},itemsep=2pt]}%
+ {\end{itemize}\end{tcolorbox}}
+% Type box:  Type [03] title  + dashed frame
+\NewDocumentEnvironment{typebox}{m m}{%
+  \keeplines{12}\vspace{2mm}\noindent
+  \begin{tcolorbox}[enhanced,breakable,colback=white,frame hidden,arc=0pt,
+    borderline={.6pt}{0pt}{black,dash pattern=on 2pt off 1.5pt},
+    left=2mm,right=2mm,top=2mm,bottom=2mm,
+    title={\labelfont\bfseries\Large Type\ \tikz[baseline=(t.base)]\node(t)[fill=black,
+      text=white,inner sep=2.5pt]{#1};\hfill{\large #2}\hfill\mbox{}},
+    colbacktitle=white,coltitle=black,titlerule=0pt,toptitle=.4mm,bottomtitle=.4mm,
+    lefttitle=1.5mm,
+    overlay unbroken and first={\draw[line width=.8pt,fill=none]
+      (title.north west) rectangle (title.south east);}]}%
+ {\end{tcolorbox}\par\vspace{1mm}}
+\newtcolorbox{roundbox}[1][]{enhanced,colback=white,colframe=black,
+  boxrule=.6pt,arc=8pt,left=2mm,right=2mm,top=1mm,bottom=1mm,#1}
+% Teacher's verbal tip (said in video, not on slide) — red-framed
+\NewDocumentEnvironment{tipbox}{o +b}{%
+  \par\keeplines{4}\vspace{1mm}
+  \begin{tcolorbox}[enhanced,colback=tipred!4,colframe=tipred,boxrule=.8pt,arc=3pt,
+    left=2mm,right=2mm,top=1mm,bottom=1mm,
+    title={\labelfont\bfseries ভিডিওতে বলা টিপস},
+    coltitle=white,colbacktitle=tipred,fonttitle=\small,toptitle=.3mm,bottomtitle=.3mm]
+  \IfValueTF{#1}{\withqr{#1}{#2}}{#2}%
+  \end{tcolorbox}}{}
+% Concept definition box (dashed, like the video sample)
+\newtcolorbox{conceptbox}{enhanced,colback=white,frame hidden,arc=2pt,
+  borderline={.6pt}{0pt}{black,dash pattern=on 2pt off 1.5pt},left=2mm,right=2mm,
+  top=1mm,bottom=1mm}
+% CQ question: badge "প্রশ্ন \inotetri{} ১১", stem, optional [source], optional QR
+\NewDocumentCommand\cq{m o m o}{% {number}[source]{stem}[seconds]
+  \par\keeplines{11}\vspace{3mm}%
+  \IfValueTF{#4}{\withqr{#4}{\inote@cqbody{#1}{#2}{#3}}}{\inote@cqbody{#1}{#2}{#3}}\nobreak}
+\newcommand\inote@cqbody[3]{%
+  \tikz[baseline=(b.base)]\node(b)[fill=black,text=white,inner xsep=3pt,inner ysep=1.5pt,
+    font=\labelfont\bfseries]{প্রশ্ন\,\inotetri{}\,#1};\ #3%
+  \IfValueT{#2}{\ifx\relax#2\relax\else\unskip\nobreak\hfil\penalty50\hskip1.5em\hbox{}\nobreak\hfill
+    \mbox{\small[#2]}\fi}\par}
+\newcommand\qpart[2]{\par\vspace{1pt}\hangindent=8mm\hangafter=1
+  \makebox[8mm][l]{\textbf{(#1)}}#2\par}
+\newcommand\solhead{\par\keeplines{6}\vspace{2pt}{\bfseries সমাধান:}\par\nobreak}
+\newcommand\anslabel[1]{\par\keeplines{5}\vspace{3pt}\noindent
+  \tikz[baseline=(a.base)]\node(a)[fill=black,text=white,minimum size=4.2mm,inner sep=1pt,
+    font=\labelfont\bfseries]{#1};\ \par\nobreak}
+% Working (left) + given data (right, with left rule) side by side
+\NewDocumentCommand\workgiven{O{0.6} +m +m}{%
+  \par\noindent
+  \begin{minipage}[t]{#1\linewidth}\vspace{0pt}#2\end{minipage}%
+  \hfill\vrule width .5pt\hspace{2mm}%
+  \begin{minipage}[t]{\dimexpr\linewidth-#1\linewidth-3mm\relax}\vspace{0pt}\small#3\end{minipage}\par}
+\newcommand\given[1]{{\small\textbf{দেওয়া আছে,}}\par #1}
+% importance stars: \stars{4} -> 4 filled + 1 empty (out of 5)
+\newcommand\stars[1]{\begin{tikzpicture}[baseline=-.6ex,x=3.1mm]
+  \foreach \i in {1,...,5}{\pgfmathparse{\i<=#1?1:0}
+    \ifnum\pgfmathresult=1\relax
+      \node[star,star points=5,star point ratio=2.3,fill=black,inner sep=0pt,minimum size=2.7mm] at (\i,0){};
+    \else
+      \node[star,star points=5,star point ratio=2.3,draw=black,line width=.4pt,inner sep=0pt,minimum size=2.7mm] at (\i,0){};
+    \fi}\end{tikzpicture}}
+\newcommand\Ans{\hfill\textbf{(Ans.)}}
+\newcommand\notefooter{%
+  \fancyhead[C]{\makebox[\headwidth]{\small\thepage\ \dotfill\ %
+    \ifx\inote@brand\@empty\else\textbf{\inote@brand}\ \inotetri\ \fi\inote@subject}}
+  \fancyfoot[L]{\ifx\inote@brand\@empty\else\tikz\node[fill=black,text=white,
+    rounded corners=3pt,inner xsep=5pt,inner ysep=1.5pt,font=\sffamily\bfseries\small]
+    {\inote@brand};\fi}}
+
+% =====================================================================
+%  MODE 3 — BUET WRITTEN  (bilingual Q, big answer space, watermark,
+%  page frame, black footer bar)
+% =====================================================================
+\newcounter{bq}
+% \bq{Bangla statement}{English statement}[seconds]
+\NewDocumentCommand\bq{+m +m o}{%
+  \par\refstepcounter{bq}\noindent
+  \IfValueTF{#3}{\withqr{#3}{\inote@bqbody{#1}{#2}}}{\inote@bqbody{#1}{#2}}}
+\newcommand\inote@bqbody[2]{%
+  \hangindent=8mm\hangafter=1\makebox[8mm][l]{\bfseries
+  \ifnum\value{bq}<10 0\fi\arabic{bq}.}#1\ifx\relax#2\relax\else\
+  {[#2]}\fi\par}
+% blank answer space. \answerspace (fills) or \answerspace[6cm]
+\NewDocumentCommand\answerspace{o}{%
+  \par\IfValueTF{#1}{\ifinote@ansbox\inote@abox{#1}\else\vspace{#1}\fi}{\vfill}\par}
+\newcommand\inote@abox[1]{\vspace{2mm}\noindent\tikz
+  \draw[gray!55,dash pattern=on 3pt off 2pt,rounded corners=3pt]
+    (0,0) rectangle (\linewidth-1pt,#1-4mm);\par\vspace{2mm}}
+\newcommand\buetdecor{%
+  \AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture,overlay]
+      \draw[line width=.6pt] ([xshift=9mm,yshift=-10mm]current page.north west)
+        rectangle ([xshift=-9mm,yshift=10mm]current page.south east);
+      \ifx\inote@watermark\@empty\else
+      \node[rotate=55,text=watergray,font=\displayfont\fontsize{88}{90}\selectfont]
+        at (current page.center) {\inote@watermark};\fi
+      \fill[black] ([xshift=13mm,yshift=13mm]current page.south west) rectangle
+        ([xshift=-13mm,yshift=18.5mm]current page.south east);
+      \node[white,font=\bfseries] at ([yshift=15.75mm]current page.south)
+        {\inote@testtitle};
+      \node[font=\small] at ([yshift=6mm,xshift=-9mm]current page.south east)[anchor=east]
+        {\thepage};
+    \end{tikzpicture}}}
+
+% ---------------------------------------------------------------- page styles
+\pagestyle{fancy}\fancyhf{}
+\renewcommand\headrulewidth{0pt}\renewcommand\footrulewidth{0pt}
+\newcommand\inote@apply{%
+  \fancyhf{}%
+  \ifdefstring{\inote@mode}{practice}{\practicefooter
+     \definecolor{accent}{HTML}{\inote@accent}}{}%
+  \ifdefstring{\inote@mode}{note}{\notefooter}{}%
+  \ifdefstring{\inote@mode}{buet}{\buetdecor
+     \newgeometry{top=17mm,bottom=27mm,left=15mm,right=15mm}}{}%
+}
+
+% ---------------------------------------------------------------- diagram styles
+\tikzset{
+  vec/.style={-{Stealth[length=2.6mm,width=1.8mm]},line width=.9pt},
+  vecthin/.style={-{Stealth[length=2mm]},line width=.6pt},
+  force/.style={-{Latex[length=2.4mm]},line width=1pt},
+  dim/.style={{Latex[length=1.6mm]}-{Latex[length=1.6mm]},line width=.4pt},
+  guide/.style={dashed,line width=.4pt,gray},
+  ground/.style={pattern=north east lines,draw=none},
+  body/.style={draw,line width=.8pt,fill=gray!15},
+  dot/.style={circle,fill,inner sep=1.1pt},
+  lbl/.style={font=\small,inner sep=1.5pt},
+  every picture/.append style={line cap=round,line join=round}
+}
+\endinput

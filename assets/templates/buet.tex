@@ -1,0 +1,17 @@
+% =====================================================================
+%  TEMPLATE — /buet   (BUET written style: bilingual question + blank space)
+%  2–3 questions per page. \answerspace fills the rest of the page evenly.
+% =====================================================================
+\documentclass[11pt]{article}
+\usepackage{inote}
+\inotesetup{mode=buet, qr=true, answerbox=false,   % answerbox=true -> dashed answer box
+  video=<<11-char ID>>,
+  watermark={<<brand, or leave empty>>},
+  test-title={<<BUET Written Practice · ভেক্টর>>}}
+\begin{document}
+\bq{<<Bangla question>>}{<<English translation of the same question>>}[<<sec>>]
+\answerspace
+\bq{<<Bangla>>}{<<English>>}[<<sec>>]
+\answerspace
+\newpage      % after every 2 (long) or 3 (short) questions
+\end{document}

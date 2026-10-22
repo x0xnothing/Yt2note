@@ -1,0 +1,159 @@
+\documentclass[11pt]{article}
+\usepackage{inote}
+\inotesetup{mode=note, qr=true,
+  brand={Interactive Note}, subject={HSC Physics 1st Paper · Chapter-02},
+  chapter={ভেক্টর}, chapter-en={Vector}, chapter-no={দ্বিতীয় অধ্যায়},
+  video=SAMPLEVIDEO}
+\begin{document}
+\chapterbanner
+
+\sectionbar{Lecture Map — টপিক অনুযায়ী ভাগ}
+\begin{tblr}{colspec={X[2.2,l,m] Q[c,m] Q[c,m] X[2.6,l,m] Q[c,m]},
+  hlines={gridgray,.5pt},vlines={gridgray,.5pt},
+  row{1}={bg=headgray,font=\labelfont\bfseries,halign=c},rowsep=2.5pt}
+টাইপের নাম & গুরুত্ব & ভিডিওতে & যা যা আছে & পৃষ্ঠা\\
+\textbf{Type-01:} ভেক্টরের লব্ধি & \stars{5} & 03:10 & সামান্তরিক সূত্র, লব্ধির দিক, ২টি ম্যাথ & ২\\
+\textbf{Type-02:} আপেক্ষিক বেগ (নদী–নৌকা) & \stars{4} & 18:40 & সর্বনিম্ন পথ ও সর্বনিম্ন সময়, ১টি সৃজনশীল & ৩\\
+\textbf{Type-03:} ডট ও ক্রস গুণন & \stars{5} & 31:05 & কোণ নির্ণয়, লম্ব হওয়ার শর্ত, ১টি ম্যাথ & ৩\\
+\end{tblr}
+
+\fancyheading{গুরুত্বপূর্ণ সূত্রাবলি ও বিশ্লেষণ}
+\begin{formulagrid}[0.52]
+\sqitem{সামান্তরিক সূত্র (লব্ধির মান):}
+$R=\sqrt{P^2+Q^2+2PQ\cos\theta}$\par
+\hspace*{3mm}$\theta=$ ভেক্টরদ্বয়ের মধ্যবর্তী কোণ\par
+\sqitem{লব্ধির দিক ($\vec P$ এর সাথে):}
+$\tan\alpha=\dfrac{Q\sin\theta}{P+Q\cos\theta}$
+&
+\begin{tikzpicture}[scale=.78]
+  \coordinate (O) at (0,0); \coordinate (P) at (3.4,0);
+  \coordinate (Q) at (1.2,1.9); \coordinate (R) at (4.6,1.9);
+  \draw[guide] (P)--(R) (Q)--(R);
+  \draw[vec] (O)--(P) node[midway,below,lbl]{$\vec P$};
+  \draw[vec] (O)--(Q) node[midway,left,lbl]{$\vec Q$};
+  \draw[vec,accent] (O)--(R) node[pos=.7,above left,lbl]{$\vec R$};
+  \pic[draw,angle radius=6mm,"$\theta$",angle eccentricity=1.45]{angle=P--O--Q};
+  \pic[draw,accent,angle radius=12mm,"$\alpha$",angle eccentricity=1.2]{angle=P--O--R};
+\end{tikzpicture}\\
+\sqitem{উপাংশ:}
+$A_x=A\cos\theta,\quad A_y=A\sin\theta$\par
+$A=\sqrt{A_x^2+A_y^2},\quad \tan\theta=\dfrac{A_y}{A_x}$
+&
+\begin{tikzpicture}[scale=.8]
+  \draw[vecthin] (-.2,0)--(3.4,0) node[right,lbl]{$x$};
+  \draw[vecthin] (0,-.2)--(0,2.1) node[above,lbl]{$y$};
+  \draw[vec,accent] (0,0)--(2.8,1.7) node[above right,lbl]{$\vec A$};
+  \draw[guide] (2.8,0)--(2.8,1.7) (0,1.7)--(2.8,1.7);
+  \draw[vec] (0,0)--(2.8,0) node[midway,below=1pt,lbl]{$A_x$};
+  \draw[vec] (0,0)--(0,1.7) node[midway,left,lbl]{$A_y$};
+  \draw (.9,0) arc (0:31.3:.9) node[pos=.55,right,lbl]{$\theta$};
+\end{tikzpicture}\\
+\sqitem{ডট গুণন (স্কেলার):}
+$\vec A\cdot\vec B=AB\cos\theta=A_xB_x+A_yB_y+A_zB_z$\par
+\sqitem{ক্রস গুণন (ভেক্টর):}
+$|\vec A\times\vec B|=AB\sin\theta$
+&
+\textbullet\ $\vec A\cdot\vec B=0$ হলে ভেক্টরদ্বয় পরস্পর \textbf{লম্ব}।\par
+\textbullet\ $\vec A\times\vec B=\vec 0$ হলে ভেক্টরদ্বয় \textbf{সমান্তরাল}।\par
+\textbullet\ $\cos\theta=\dfrac{\vec A\cdot\vec B}{AB}$ — কোণ বের করার সবচেয়ে সহজ উপায়।\\
+\end{formulagrid}
+
+\begin{unitbox}[দ্রুত মনে রাখো]
+\item $\theta=0^\circ$ হলে $R_{\max}=P+Q$;\quad $\theta=180^\circ$ হলে $R_{\min}=|P-Q|$
+\item $\theta=90^\circ$ হলে $R=\sqrt{P^2+Q^2}$
+\item $\hat i\cdot\hat i=1,\ \hat i\cdot\hat j=0;\quad \hat i\times\hat j=\hat k,\ \hat j\times\hat k=\hat i,\ \hat k\times\hat i=\hat j$
+\end{unitbox}
+
+\begin{multicols}{2}
+% ---------------------------------------------------------------- TYPE 01
+\begin{typebox}{01}{ভেক্টরের লব্ধি}
+\withqr{190}{\textbf{কনসেপ্ট:} দুটি ভেক্টর একই বিন্দুতে কোনো কোণে ক্রিয়া করলে তাদের সম্মিলিত ফলকে \textbf{লব্ধি} বলে। দুটি ভেক্টরকে সামান্তরিকের দুই সন্নিহিত বাহু ধরলে, সেই বিন্দু থেকে আঁকা কর্ণই লব্ধি।}
+\sqitem{মান:} $R=\sqrt{P^2+Q^2+2PQ\cos\theta}$
+\sqitem{দিক:} $\tan\alpha=\dfrac{Q\sin\theta}{P+Q\cos\theta}$
+\begin{roundbox}
+\textbullet\ কোণ যত বাড়ে, লব্ধি তত কমে।\par
+\textbullet\ সমান মানের দুটি ভেক্টরের লব্ধি সবসময় তাদের \textbf{কোণের সমদ্বিখণ্ডক} বরাবর।
+\end{roundbox}
+\end{typebox}
+
+\begin{tipbox}[455]
+$\alpha$ সবসময় যে ভেক্টরের সাথে মাপছো, সূত্রে সেটাকেই $P$ ধরো — না হলে দিক উল্টো আসবে। পরীক্ষায় "কার সাথে" লিখতে ভুলবে না।
+\end{tipbox}
+
+\cq{১}[ভিডিও ম্যাথ]{৬ একক ও ৮ একক মানের দুটি ভেক্টর $60^\circ$ কোণে ক্রিয়া করছে। লব্ধির মান ও দিক নির্ণয় করো।}[520]
+\solhead
+\workgiven[0.62]{%
+$R=\sqrt{P^2+Q^2+2PQ\cos\theta}$\\
+$\;\;=\sqrt{6^2+8^2+2\cdot6\cdot8\cos60^\circ}$\\
+$\;\;=\sqrt{36+64+48}=\sqrt{148}$\\
+$\;\;=12.17$ একক \Ans\par\vspace{2pt}
+$\tan\alpha=\dfrac{8\sin60^\circ}{6+8\cos60^\circ}=\dfrac{6.928}{10}$\\
+$\alpha=34.71^\circ$ \Ans}
+{\given{$P=6$ একক\\ $Q=8$ একক\\ $\theta=60^\circ$}}
+
+\cq{২}[ভিডিও ম্যাথ]{সমান মানের দুটি বল $F$ এর লব্ধির মানও $F$ হলে বল দুটির মধ্যবর্তী কোণ কত?}[760]
+\solhead
+\workgiven[0.62]{%
+$F^2=F^2+F^2+2F^2\cos\theta$\\
+$\Rightarrow\cos\theta=-\dfrac12$\\
+$\therefore\ \theta=120^\circ$ \Ans}
+{\given{$P=Q=F$\\ $R=F$}}
+
+% ---------------------------------------------------------------- TYPE 02
+\begin{typebox}{02}{আপেক্ষিক বেগ: নদী–নৌকা}
+\withqr{1120}{\textbf{কনসেপ্ট:} নৌকার লব্ধি বেগ = নৌকার নিজস্ব বেগ $\vec v$ + স্রোতের বেগ $\vec u$। কোন দিকে চালাবে তা নির্ভর করে কী চাই তার উপর — \textbf{কম পথ} নাকি \textbf{কম সময়}।}
+\begin{center}
+\begin{tikzpicture}[scale=.82]
+  \fill[accent!8] (0,0) rectangle (5.4,2.4);
+  \draw[line width=1pt] (0,0)--(5.4,0) (0,2.4)--(5.4,2.4);
+  \foreach \y in {.6,1.2,1.8}{\draw[vecthin,accent!60] (3.7,\y)--(4.9,\y);}
+  \node[lbl,accent] at (4.3,2.1) {স্রোত $\vec u$};
+  \coordinate (A) at (1.6,0);
+  \draw[vec] (A)--++(-1.2,2.4) node[above,lbl]{$\vec v$};
+  \draw[vec,accent] (A)--++(0,2.4) node[above,lbl]{$\vec R$};
+  \draw[dim] (5.65,0)--(5.65,2.4) node[midway,right,lbl]{$d$};
+  \draw (1.6,.7) arc (90:116.6:.7) node[midway,above,lbl]{$\beta$};
+\end{tikzpicture}
+\end{center}
+\sqitem{সর্বনিম্ন পথ (সোজা পার):} $\sin\beta=\dfrac uv,\quad t=\dfrac{d}{\sqrt{v^2-u^2}}$
+\sqitem{সর্বনিম্ন সময় (লম্বভাবে চালাও):} $t_{\min}=\dfrac dv,\quad x=u\,t_{\min}$
+\end{typebox}
+
+\cq{৩}[ভিডিও সৃজনশীল]{$1\,\text{km}$ প্রশস্ত নদীতে স্রোতের বেগ $3\,\text{km\,h}^{-1}$। স্থির পানিতে নৌকার বেগ $5\,\text{km\,h}^{-1}$।}[1310]
+\qpart{গ}{সবচেয়ে কম পথে পার হতে কত সময় লাগবে?}
+\qpart{ঘ}{সবচেয়ে কম সময়ে পার হলে নৌকা কতদূর ভাটিতে সরে যাবে? গাণিতিক বিশ্লেষণ দাও।}
+\solhead
+\anslabel{গ}
+\workgiven[0.62]{%
+$R=\sqrt{v^2-u^2}=\sqrt{25-9}$\\
+$\;\;=4\,\text{km\,h}^{-1}$\\
+$t=\dfrac dR=\dfrac14\,\text{h}=15$ মিনিট \Ans}
+{\given{$d=1\,\text{km}$\\ $u=3\,\text{km\,h}^{-1}$\\ $v=5\,\text{km\,h}^{-1}$}}
+\anslabel{ঘ}
+নৌকাকে স্রোতের লম্বভাবে চালাতে হবে।\par
+$t_{\min}=\dfrac dv=\dfrac15\,\text{h}=12$ মিনিট\par
+$x=u\,t_{\min}=3\times\dfrac15=0.6\,\text{km}$\par
+$\therefore$ নৌকা $600\,\text{m}$ ভাটিতে সরে যাবে। \Ans
+
+% ---------------------------------------------------------------- TYPE 03
+\begin{typebox}{03}{ডট ও ক্রস গুণন}
+\withqr{1865}{\textbf{কনসেপ্ট:} ডট গুণনে ফল একটি \textbf{স্কেলার} (সংখ্যা), ক্রস গুণনে ফল একটি \textbf{ভেক্টর} যার দিক দুই ভেক্টরের তলের লম্ব বরাবর (ডানহাতি স্ক্রু নিয়ম)।}
+\sqitem{কোণ:} $\cos\theta=\dfrac{A_xB_x+A_yB_y+A_zB_z}{AB}$
+\sqitem{ক্রস গুণন নির্ণায়ক:}
+$\vec A\times\vec B=\begin{vmatrix}\hat i&\hat j&\hat k\\A_x&A_y&A_z\\B_x&B_y&B_z\end{vmatrix}$
+\end{typebox}
+
+\begin{tipbox}[2010]
+ডট গুণনে ঋণাত্মক উত্তর আসলে ঘাবড়াবে না — মানে কোণটা $90^\circ$ এর বেশি (স্থূলকোণ)।
+\end{tipbox}
+
+\cq{৪}[ভিডিও ম্যাথ]{$\vec A=2\hat i+3\hat j-\hat k$ এবং $\vec B=\hat i-2\hat j+2\hat k$ হলে এদের মধ্যবর্তী কোণ ও $|\vec A\times\vec B|$ নির্ণয় করো।}[2140]
+\solhead
+$\vec A\cdot\vec B=(2)(1)+(3)(-2)+(-1)(2)=-6$\par
+$A=\sqrt{4+9+1}=\sqrt{14},\quad B=\sqrt{1+4+4}=3$\par
+$\cos\theta=\dfrac{-6}{3\sqrt{14}}=-0.5345$\par
+$\therefore\ \theta=122.31^\circ$ \Ans\par\vspace{2pt}
+$\vec A\times\vec B=\begin{vmatrix}\hat i&\hat j&\hat k\\2&3&-1\\1&-2&2\end{vmatrix}=4\hat i-5\hat j-7\hat k$\par
+$|\vec A\times\vec B|=\sqrt{16+25+49}=\sqrt{90}=9.49$ একক \Ans
+\end{multicols}
+\end{document}

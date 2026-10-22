@@ -1,0 +1,141 @@
+% =====================================================================
+%  Interactive Note — TESTED TikZ diagram recipes (compile: build.sh)
+%  Copy the tikzpicture you need, then change numbers/labels.
+%  Every recipe uses only styles defined in inote.sty:
+%   vec, vecthin, force, dim, guide, ground, body, dot, lbl, accent colour
+% =====================================================================
+\documentclass[11pt]{article}
+\usepackage{inote}
+\inotesetup{mode=note,brand={Diagram Recipes},subject={TikZ}}
+\newcommand\recipe[2]{\begin{minipage}[t]{.48\linewidth}\centering
+  {\labelfont\bfseries #1}\par\vspace{2mm}#2\end{minipage}}
+\begin{document}
+\sectionbar{Physics + Math diagram recipes (all tested)}
+
+% ---------------------------------------------------------------- R1 vectors
+\recipe{R1 · ভেক্টর সামান্তরিক সূত্র}{%
+\begin{tikzpicture}[scale=.85]
+  \coordinate (O) at (0,0); \coordinate (P) at (3.4,0);
+  \coordinate (Q) at (1.2,1.9); \coordinate (R) at (4.6,1.9);
+  \draw[guide] (P)--(R) (Q)--(R);
+  \draw[vec] (O)--(P) node[midway,below,lbl]{$\vec P$};
+  \draw[vec] (O)--(Q) node[midway,left,lbl]{$\vec Q$};
+  \draw[vec,accent] (O)--(R) node[pos=.7,above left,lbl]{$\vec R$};
+  \pic[draw,angle radius=6mm,"$\theta$",angle eccentricity=1.45]{angle=P--O--Q};
+  \pic[draw,accent,angle radius=12mm,"$\alpha$",angle eccentricity=1.2]{angle=P--O--R};
+\end{tikzpicture}}\hfill
+% ---------------------------------------------------------------- R2 incline
+\recipe{R2 · আনত তল ও বল}{%
+\begin{tikzpicture}[scale=.85]
+  \def\ang{30}
+  \fill[ground] (0,0)--(5,0)--(5,-.25)--(0,-.25)--cycle;
+  \draw[line width=.8pt] (0,0)--(5,0)--(5,{5*tan(\ang)})--cycle;
+  \draw (1,0) arc (0:\ang:1) node[pos=.5,right,lbl]{$\theta$};
+  \begin{scope}[shift={(3.0,{3.0*tan(\ang)})},rotate=\ang]
+    \draw[body] (-.5,0) rectangle (.5,.7); \coordinate (c) at (0,.35);
+    \draw[force,accent] (c)--++(0,1.25) node[above,lbl]{$N$};
+    \draw[force] (-.5,.35)--++(-1.1,0) node[left,lbl]{$f$};
+  \end{scope}
+  \draw[force] (c)--++(0,-1.45) node[below,lbl]{$mg$};
+\end{tikzpicture}}
+
+\vspace{5mm}
+% ---------------------------------------------------------------- R3 projectile
+\recipe{R3 · প্রক্ষেপক গতি}{%
+\begin{tikzpicture}[scale=.8]
+  \draw[vecthin] (0,0)--(6.3,0) node[right,lbl]{$x$};
+  \draw[vecthin] (0,0)--(0,2.4) node[above,lbl]{$y$};
+  \draw[accent,line width=1pt,domain=0:5.6,samples=60] plot(\x,{\x*tan(50)-0.0879*\x*\x/(cos(50)^2)});
+  \draw[vec] (0,0)--(50:1.3) node[above left,lbl]{$u$};
+  \draw (.6,0) arc (0:50:.6) node[pos=.6,right,lbl]{$\theta_0$};
+  \draw[guide] (2.8,0)--(2.8,1.67) node[above,lbl]{$H$};
+  \draw[dim] (0,-.4)--(5.6,-.4) node[midway,below,lbl]{$R$};
+\end{tikzpicture}}\hfill
+% ---------------------------------------------------------------- R4 gas
+\recipe{R4 · পিস্টনযুক্ত সিলিন্ডারে গ্যাস}{%
+\begin{tikzpicture}[scale=.85]
+  \draw[line width=1.2pt] (0,3)--(0,0)--(3,0)--(3,3);
+  \fill[gray!60] (0.04,1.9) rectangle (2.96,2.15);
+  \draw[line width=1pt] (1.5,2.15)--(1.5,3.2);
+  \draw[force] (1.5,3.9)--(1.5,3.25) node[pos=0,above,lbl]{$P$};
+  \pgfmathsetseed{7}
+  \foreach \i in {1,...,22}{\fill (0.25+2.5*rnd,0.2+1.5*rnd) circle (1.4pt);}
+  \draw[dim] (3.35,0)--(3.35,1.9) node[midway,right,lbl]{$V$};
+\end{tikzpicture}}
+
+\vspace{5mm}
+% ---------------------------------------------------------------- R5 circuit
+\recipe{R5 · বর্তনী (circuitikz)}{%
+\begin{circuitikz}[scale=.85,transform shape]
+  \draw (0,0) to[battery1,l=$E$] (0,2.5) to[R,l=$R_1$] (3.5,2.5)
+        to[R,l=$R_2$,*-*] (3.5,0); \draw (0,0) to[ammeter] (3.5,0);
+  \draw (3.5,2.5) -- (5,2.5) to[R,l=$R_3$] (5,0) -- (3.5,0);
+\end{circuitikz}}\hfill
+% ---------------------------------------------------------------- R6 lens
+\recipe{R6 · উত্তল লেন্সে প্রতিবিম্ব}{%
+\begin{tikzpicture}[scale=.75]
+  \draw[guide] (-4.3,0)--(5,0);
+  \draw[accent,line width=1pt] (0,-1.7) .. controls (.35,0) .. (0,1.7)
+        .. controls (-.35,0) .. (0,-1.7);
+  \foreach \x/\n in {-1.6/F,1.6/F}{\node[dot,label=below:{\scriptsize$\n$}] at (\x,0){};}
+  \draw[vec] (-3,0)--(-3,1.1) node[above,lbl]{বস্তু};
+  \draw[vecthin] (-3,1.1)--(0,1.1)--(4.8,-2.2);
+  \draw[vecthin] (-3,1.1)--(4.8,-1.76);
+  \draw[vec,accent] (3.43,0)--(3.43,-1.257); \node[lbl,accent,above] at (3.43,0) {বিম্ব};
+\end{tikzpicture}}
+
+\vspace{5mm}
+% ---------------------------------------------------------------- R7 graph
+\recipe{R7 · লেখচিত্র (pgfplots)}{%
+\begin{tikzpicture}
+\begin{axis}[width=6.2cm,height=4.2cm,axis lines=left,xlabel={$t$ (s)},ylabel={$v$ (m\,s$^{-1}$)},
+  xmin=0,xmax=10,ymin=0,ymax=25,xtick={0,2,...,10},ytick={0,10,20},
+  every axis label/.style={font=\small},tick label style={font=\scriptsize}]
+  \addplot[accent,thick] coordinates {(0,0)(4,20)(8,20)(10,0)};
+  \addplot[guide] coordinates {(4,0)(4,20)};
+  \node[lbl] at (axis cs:6,10) {ক্ষেত্রফল $=$ সরণ};
+\end{axis}
+\end{tikzpicture}}\hfill
+% ---------------------------------------------------------------- R8 SHM
+\recipe{R8 · স্প্রিং ও সরল দোলক}{%
+\begin{tikzpicture}[scale=.85]
+  \fill[ground] (-.3,0) rectangle (0,1.4); \draw (0,0)--(0,1.4);
+  \draw[decorate,decoration={coil,aspect=.5,segment length=2.2mm,amplitude=2.2mm}] (0,.7)--(2,.7);
+  \draw[body] (2,.35) rectangle (2.8,1.05) node[midway]{\small $m$};
+  \fill[ground] (-.3,-.25) rectangle (3.4,0); \draw (-.3,0)--(3.4,0);
+  \begin{scope}[xshift=4.6cm]
+    \fill[ground] (-.6,2.1) rectangle (.6,2.35); \draw (-.6,2.1)--(.6,2.1);
+    \draw[guide] (0,2.1)--(0,.2);
+    \draw[line width=.7pt] (0,2.1)--++(-70:1.9) coordinate (bob);
+    \fill[accent] (bob) circle (.16);
+    \draw (0,1.5) arc (-90:-70:.6); \node[lbl] at ($(0,2.1)+(-80:.95)$) {$\theta$};
+    \node[lbl] at ($(0,2.1)+(-70:1.1)+(.3,.1)$) {$L$};
+  \end{scope}
+\end{tikzpicture}}
+
+\vspace{5mm}
+% ---------------------------------------------------------------- R9 3D box
+\recipe{R9 · ৩D বাক্স (গ্যাসের গতিতত্ত্ব)}{%
+\begin{tikzpicture}[scale=.75,x={(1cm,0)},y={(.45cm,.3cm)},z={(0,1cm)}]
+  \def\l{3}
+  \draw[line width=.7pt] (0,0,0)--(\l,0,0)--(\l,0,\l)--(0,0,\l)--cycle;
+  \draw[line width=.7pt] (\l,0,0)--(\l,\l,0)--(\l,\l,\l)--(0,\l,\l)--(0,0,\l) (\l,0,\l)--(\l,\l,\l);
+  \fill[gray!40] (\l,0,0)--(\l,\l,0)--(\l,\l,\l)--(\l,0,\l)--cycle;
+  \draw[guide] (0,0,0)--(0,\l,0)--(\l,\l,0) (0,\l,0)--(0,\l,\l);
+  \draw[vecthin] (0,0,0)--(4,0,0) node[right,lbl]{$x$};
+  \draw[vecthin] (0,0,0)--(0,0,3.8) node[above,lbl]{$z$};
+  \node[dot] (m) at (1.5,1,1.6){}; \draw[vec,accent] (m)--++(1,0,0) node[right,lbl]{$c_1$};
+  \draw[dim] (0,-.4,0)--(\l,-.4,0) node[midway,below,lbl]{$l$};
+\end{tikzpicture}}\hfill
+% ---------------------------------------------------------------- R10 coordinate geometry
+\recipe{R10 · স্থানাঙ্ক জ্যামিতি (বৃত্ত ও রেখা)}{%
+\begin{tikzpicture}[scale=.42]
+  \draw[vecthin] (-2.5,0)--(5.5,0) node[right,lbl]{$x$};
+  \draw[vecthin] (0,-1)--(0,11) node[above,lbl]{$y$};
+  \draw[accent,line width=.9pt] (1,6) circle (3);
+  \draw[line width=.8pt,domain=-2:2.6] plot(\x,{2*\x+4}) node[right,lbl]{$2x-y+4=0$};
+  \node[dot,label=right:{\scriptsize$A(4,6)$}] at (4,6){};
+  \node[dot,label=above:{\scriptsize$B(1,9)$}] at (1,9){};
+  \node[dot,label=below right:{\scriptsize$C(1,6)$}] at (1,6){};
+\end{tikzpicture}}
+\end{document}

@@ -1,0 +1,33 @@
+\documentclass[11pt]{article}
+\usepackage{inote}
+\inotesetup{mode=buet, qr=true, answerbox=false,
+  watermark={Interactive Note}, test-title={BUET Written Practice · ভেক্টর},
+  video=SAMPLEVIDEO}
+\begin{document}
+\bq{দুটি ভেক্টর $\vec A$ ও $\vec B$ এর লব্ধির মান $\vec A$ এর মানের সমান এবং লব্ধিটি $\vec A$ এর সাথে সমকোণ উৎপন্ন করে। দেখাও যে, $B=\sqrt2\,A$ এবং $\vec A$ ও $\vec B$ এর মধ্যবর্তী কোণ $135^\circ$।}
+{The magnitude of the resultant of $\vec A$ and $\vec B$ equals that of $\vec A$ and the resultant is perpendicular to $\vec A$. Show that $B=\sqrt2\,A$ and the angle between $\vec A$ and $\vec B$ is $135^\circ$.}[520]
+\answerspace
+\bq{$400\,\text{m}$ প্রশস্ত একটি নদীতে স্রোতের বেগ $2\,\text{m\,s}^{-1}$। একজন সাঁতারু স্থির পানিতে $4\,\text{m\,s}^{-1}$ বেগে সাঁতার কাটতে পারে। সে ঠিক বিপরীত তীরের $300\,\text{m}$ ভাটিতে অবস্থিত বিন্দু $C$ তে পৌঁছাতে চাইলে কোন দিকে সাঁতার কাটবে এবং কত সময় লাগবে?}
+{A river $400\,\text{m}$ wide flows at $2\,\text{m\,s}^{-1}$. A swimmer can swim at $4\,\text{m\,s}^{-1}$ in still water. In which direction must he swim to reach point $C$, $300\,\text{m}$ downstream on the opposite bank, and how long will it take?}[1310]
+\begin{center}
+\begin{tikzpicture}[scale=.75]
+  \fill[accent!7] (0,0) rectangle (7,3);
+  \draw[line width=1pt] (0,0)--(7,0) (0,3)--(7,3);
+  \foreach \y in {.8,1.5,2.2}{\draw[vecthin,gray] (5.2,\y)--(6.5,\y);}
+  \node[dot,label=below:$A$] (A) at (1.5,0) {};
+  \node[dot,label=above:$C$] (C) at (5.25,3) {};
+  \draw[guide] (A)--(1.5,3) node[dot,label=left:$B$]{};
+  \draw[vec,accent] (A)--(C);
+  \draw[dim] (1.5,3.9)--(5.25,3.9) node[midway,above,lbl]{$300\,\text{m}$};
+  \draw[dim] (-.35,0)--(-.35,3) node[midway,left,lbl]{$400\,\text{m}$};
+\end{tikzpicture}
+\end{center}
+\answerspace
+\newpage
+\bq{একজন লোক $5\,\text{km\,h}^{-1}$ বেগে পূর্ব দিকে হাঁটলে বৃষ্টি খাড়াভাবে পড়ছে বলে মনে হয়। বেগ দ্বিগুণ করলে বৃষ্টি উল্লম্বের সাথে $45^\circ$ কোণে পড়ছে বলে মনে হয়। বৃষ্টির প্রকৃত বেগের মান ও দিক নির্ণয় করো।}
+{When a man walks east at $5\,\text{km\,h}^{-1}$, rain appears to fall vertically. When he doubles his speed, the rain appears to fall at $45^\circ$ to the vertical. Find the actual speed and direction of the rain.}[1655]
+\answerspace
+\bq{$\vec A=2\hat i-\hat j+\hat k$ ও $\vec B=\hat i+3\hat j-2\hat k$ উভয় ভেক্টরের লম্ব দিকে একটি একক ভেক্টর নির্ণয় করো এবং দেখাও যে এটি $\vec A$ ও $\vec B$ এর তলের উপর লম্ব।}
+{Find a unit vector perpendicular to both $\vec A=2\hat i-\hat j+\hat k$ and $\vec B=\hat i+3\hat j-2\hat k$, and show that it is normal to the plane of $\vec A$ and $\vec B$.}[2140]
+\answerspace
+\end{document}
