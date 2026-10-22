@@ -32,9 +32,9 @@ Every style below is a finished sample built with this skill (PDF + its `.tex` s
 
 | | |
 |---|---|
-| ![QR note — concepts, tips & worked math with timestamp QR codes](docs/demo-note-with-qr-p2.jpg) | ![QR note — chapter opening page](docs/demo-note-with-qr-p1.jpg) |
+| ![QR note — concepts, tips & worked math with timestamp QR codes](docs/IMG_9304.jpeg) | ![QR note — chapter opening page](docs/IMG_9305.jpeg) |
 | **`/note-with-qr`** — concept boxes, teacher tips & worked math; প্রতিটার পাশে exact-timestamp QR | **`/note-with-qr`** — chapter opening page |
-| ![BUET written-style paper](docs/demo-buet-p1.jpg) | ![Practice sheet](docs/demo-practice-sheet-p1.jpg) |
+| ![BUET written-style paper](docs/IMG_9306.jpeg) | ![Practice sheet](docs/IMG_9307.jpeg) |
 | **`/buet`** — bilingual questions, উত্তরের জন্য ফাঁকা জায়গা | **`/practice-sheet`** — math only, print & practice |
 
 ## ⌨️ Commands
