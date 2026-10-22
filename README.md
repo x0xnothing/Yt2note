@@ -28,6 +28,15 @@ Every style below is a finished sample built with this skill (PDF + its `.tex` s
 | Practice sheet with answers | `/practice-sheet-ans` | [practice-sheet-ans.pdf](examples/practice-sheet-ans.pdf) · [source](examples/practice-sheet-ans.tex) |
 | TikZ diagram recipes | reference | [diagram-recipes.pdf](examples/diagram-recipes.pdf) · [source](references/diagram-recipes.tex) |
 
+## 📸 Example pages
+
+| | |
+|---|---|
+| ![QR note — concepts, tips & worked math with timestamp QR codes](docs/demo-note-with-qr-p2.jpg) | ![QR note — chapter opening page](docs/demo-note-with-qr-p1.jpg) |
+| **`/note-with-qr`** — concept boxes, teacher tips & worked math; প্রতিটার পাশে exact-timestamp QR | **`/note-with-qr`** — chapter opening page |
+| ![BUET written-style paper](docs/demo-buet-p1.jpg) | ![Practice sheet](docs/demo-practice-sheet-p1.jpg) |
+| **`/buet`** — bilingual questions, উত্তরের জন্য ফাঁকা জায়গা | **`/practice-sheet`** — math only, print & practice |
+
 ## ⌨️ Commands
 
 | Command | What you get |
